@@ -1,0 +1,5 @@
+ssmMavenTest/.settings/*
+ssmMavenTest/log.base_IS_UNDEFINED/*
+ssmMavenTest/target/*
+ssmMavenTest/.classpath
+ssmMavenTest/.project
