@@ -1,0 +1,119 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>lll.sbv</groupId>
+  <artifactId>SpringBootVue</artifactId>
+  <!-- 打包后的格式 -->
+  <!-- <packaging>war</packaging>  -->
+  <packaging>jar</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>SpringBootVue Maven Webapp</name>
+  <url>http://maven.apache.org</url>  
+  <!-- springboot -->
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.0.0.RELEASE</version>
+  </parent>
+  <properties>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	<java.version>1.8</java.version>
+	<mysql.version>5.1.35</mysql.version>  
+  </properties>
+  <dependencies>
+    <!-- 上边引入 parent，因此 下边无需指定版本 -->
+    <!-- 包含 mvc,aop 等jar资源 -->
+  	<dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+            <!-- JJWT 加密-->
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt</artifactId>
+        <version>0.9.0</version>
+    </dependency>
+    <!-- 当我们修改文件和创建文件时，都需要重新启动项目。这样频繁的操作很浪费时间，配置热部署可以让项目自动加载变化的文件，省去的手动操作 -->
+    <!-- 热部署 -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <optional>true</optional>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    
+    <!-- mybatis -->
+	<dependency>
+		<groupId>org.mybatis.spring.boot</groupId>
+		<artifactId>mybatis-spring-boot-starter</artifactId>
+		<version>1.2.0</version>
+	</dependency>
+
+	<!-- mysql -->
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<scope>runtime</scope>
+		<version>${mysql.version}</version>
+	</dependency>
+
+	<!--commons-io  -->
+ 	<dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.4</version>
+    </dependency>
+    <!-- ali druid数据库连接池 -->
+    <dependency>  
+        <groupId>com.alibaba</groupId>  
+        <artifactId>druid</artifactId>  
+        <version>1.0.29</version>  
+    </dependency> 
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <finalName>SpringBootVue</finalName>
+    
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+            	<!-- 热部署启动 -->
+                <!-- 没有该配置，devtools 不生效 -->
+                <fork>true</fork>
+            </configuration>
+        </plugin>
+    </plugins>
+    
+    <!-- 扫描src/main/java中的xml文件 -->
+	<resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>false</filtering> 
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.xml</include>
+                    <include>*.properties</include>
+                </includes>
+                <filtering>false</filtering> 
+            </resource>
+	</resources>   
+  </build>
+</project>
