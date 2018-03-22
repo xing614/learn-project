@@ -1,4 +1,4 @@
-package demo.util;
+package demo.security;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 

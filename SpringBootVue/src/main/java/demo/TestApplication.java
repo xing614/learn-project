@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import demo.filter.JwtFilter;
+//import demo.filter.JwtFilter;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -43,16 +43,6 @@ public class TestApplication implements CommandLineRunner{
      String home() {  
          return "Hello World222!";  
      }  
-     
-     //要保护的url：/user下的
-     @Bean
-     public FilterRegistrationBean jwtFilter() {
-         FilterRegistrationBean rbean = new FilterRegistrationBean();
-         rbean.setFilter(new JwtFilter());
-         rbean.addUrlPatterns("/user/*");// 过滤user下的链接
-         
-         return rbean;
-     }
 
      public static void main(String[] args) {  
          SpringApplication.run(TestApplication.class, args);  
