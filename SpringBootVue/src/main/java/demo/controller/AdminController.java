@@ -3,6 +3,7 @@ package demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import demo.entity.User;
@@ -17,7 +18,8 @@ public class AdminController {
     private IUserServiceImpl userService;
 
     @RequestMapping("login")
-    public User page1(@RequestParam("id")int id) {
+    @ResponseBody
+    public User login(@RequestParam("id")int id) {
         return userService.getUserById(id);
     }
     

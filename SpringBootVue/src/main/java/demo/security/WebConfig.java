@@ -1,17 +1,23 @@
 package demo.security;
 
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 
@@ -23,6 +29,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ComponentScan
 public class WebConfig extends WebMvcConfigurerAdapter {
 
+    //Spring Boot底层通过HttpMessageConverters依靠Jackson库将Java实体类输出为JSON格式。
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+    	super.configureMessageConverters(converters);
+    	converters.add(responseBodyConverter());
+    	converters.add(mappingJackson2HttpMessageConverter()); 
+    }
+    
 	/**
 	 * CORSConfiguration配置,跨域访问
 	 */
@@ -42,20 +56,34 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         // 多个拦截器组成一个拦截器链
         // addPathPatterns 用于添加拦截规则
         // excludePathPatterns 用户排除拦截
-    	//registry.addInterceptor(new JwtInterceptor()).addPathPatterns("/user/*");
-        registry.addInterceptor(new JwtInterceptor()).excludePathPatterns("/user/login");
+    	registry.addInterceptor(new JwtInterceptor()).addPathPatterns("/user/*").excludePathPatterns("/user/login");
+        //registry.addInterceptor(new JwtInterceptor()).excludePathPatterns("/user/login");
     }
     
-    //将格式改为utf-8
+    //用来对参数值和返回值的转换处理，将格式改为utf-8
     @Bean
     public HttpMessageConverter<String> responseBodyConverter(){
     	StringHttpMessageConverter converter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
     	return converter;
     }
-    //Spring Boot底层通过HttpMessageConverters依靠Jackson库将Java实体类输出为JSON格式。
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-    	super.configureMessageConverters(converters);
-    	converters.add(responseBodyConverter());
-    }
+    
+    //没写这个之前，控制层直接返回类对象会报错。作用是用于将对象转换为 JSON。使用 Jackson 的 ObjectMapper 读取/编写 JSON 数据。它转换媒体类型为 application/json 的数据。
+    @Bean  
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){ 
+    	MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();  
+        //全局修改，设置日期格式 。默认日期格式是把2017-10-25  转换为 时间戳：15003323990
+    	//如果想要单个bean的某个日期字段显示年月日时分秒的话，只需要在对应日期的get方法上添加@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")即可
+        ObjectMapper objectMapper = new ObjectMapper();  
+        SimpleDateFormat smt = new SimpleDateFormat("yyyy-MM-dd");  
+        objectMapper.setDateFormat(smt);  
+        mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);  
+        //设置中文编码格式  
+        List<MediaType> list = new ArrayList<MediaType>();  
+        list.add(MediaType.APPLICATION_JSON_UTF8);  
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(list);  
+        return mappingJackson2HttpMessageConverter;  
+        //return new MappingJackson2HttpMessageConverter();  
+    } 
+    
+
 }

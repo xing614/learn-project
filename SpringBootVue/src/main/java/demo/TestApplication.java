@@ -13,12 +13,16 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import demo.entity.User;
+import demo.util.ReturnJsonValue;
 //import demo.filter.JwtFilter;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -38,10 +42,14 @@ public class TestApplication implements CommandLineRunner{
 	@Autowired  
     DataSource dataSource; 
 	
+	//@RequestBody不支持getMapping，所以使用postmapping就可以用了
+	//开始我用@RequestMapping和@RequestBody结合报错，后来又没错了不知道为什么
      @RequestMapping("/home")  
      @ResponseBody
-     String home() {  
-         return "Hello World222!";  
+     public ReturnJsonValue home(@RequestBody User user) { 
+    	 System.out.println(user.getId());
+    	 String msg = "Hello World222!";
+         return new ReturnJsonValue(msg);  
      }  
 
      public static void main(String[] args) {  
