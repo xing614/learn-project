@@ -43,9 +43,8 @@ public class TestApplication implements CommandLineRunner{
     DataSource dataSource; 
 	
 	//@RequestBody不支持getMapping，所以使用postmapping就可以用了
-	//开始我用@RequestMapping和@RequestBody结合报错，后来又没错了不知道为什么
-     @RequestMapping("/home")  
-     @ResponseBody
+	//开始我用@RequestMapping和@RequestBody结合报错，后来又没错了不知道为什么,然后又错了
+     @PostMapping("/home")  
      public ReturnJsonValue home(@RequestBody User user) { 
     	 System.out.println(user.getId());
     	 String msg = "Hello World222!";

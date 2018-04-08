@@ -1,4 +1,4 @@
-package demo.security;
+package demo.config;
 
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
@@ -19,6 +19,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import demo.security.JwtInterceptor;
+
 /**
  * 
  * @author liang
@@ -34,7 +36,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
     	super.configureMessageConverters(converters);
     	converters.add(responseBodyConverter());
-    	converters.add(mappingJackson2HttpMessageConverter()); 
+    	//正常在ResponseBodyAdvice 中处理返回值为Object类型没问题，但是如果处理string类型就有可能出问题，有可能遇到类型不匹配的问题
+    	//HttpMessageConverter是根据Controller的原始返回值类型进行处理的，而我们在ResponseAdvisor中改变了返回值的类型。
+    	//最容易出现问题的就是String类型，因为在所有的HttpMessageConverter实例集合中，StringHttpMessageConverter要比其它的Converter排得靠前一些。
+    	//尝试将处理Object类型的HttpMessageConverter放得靠前一些，这可以在Configuration类中完成：
+    	converters.add(0,mappingJackson2HttpMessageConverter());
     }
     
 	/**

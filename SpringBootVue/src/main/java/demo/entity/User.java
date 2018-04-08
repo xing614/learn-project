@@ -1,28 +1,44 @@
 package demo.entity;
 
-public class User {
-    private Integer id;
+import java.util.Date;
 
-    private String userName;
+public class User {
+    private Long id;
+
+    private String username;
+
+    private String email;
 
     private String password;
 
-    private Integer age;
+    private Date createTime;
 
-    public Integer getId() {
+    private Date lastLoginTime;
+
+    private Long status;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName == null ? null : userName.trim();
+    public void setUsername(String username) {
+        this.username = username == null ? null : username.trim();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
     }
 
     public String getPassword() {
@@ -33,11 +49,27 @@ public class User {
         this.password = password == null ? null : password.trim();
     }
 
-    public Integer getAge() {
-        return age;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(Date lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
+
+    public Long getStatus() {
+        return status;
+    }
+
+    public void setStatus(Long status) {
+        this.status = status;
     }
 }

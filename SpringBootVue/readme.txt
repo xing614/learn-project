@@ -1,0 +1,4 @@
+使用了springboot+vue
+做了一个简单的登陆验证封装（角色权限设置）：登陆成功后在header头部放参数：Authorization = Bearer + JwtUtil.getToken(name)
+然后使用拦截类HandlerInterceptorAdapter设定拦截方法
+在WebMvcConfigurerAdapter类的addInterceptors方法中添加拦截配置
