@@ -7,7 +7,7 @@
     <result column="type" property="type" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, type
+    id, name, description
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -24,9 +24,9 @@ SELECT role.id,role.name from u_user_role urole left join u_role role on urole.r
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="demo.entity.Role" >
-    insert into u_role (id, name, type
+    insert into u_role (id, name, description
       )
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="demo.entity.Role" >
@@ -39,7 +39,7 @@ SELECT role.id,role.name from u_user_role urole left join u_role role on urole.r
         name,
       </if>
       <if test="type != null" >
-        type,
+        description,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -49,8 +49,8 @@ SELECT role.id,role.name from u_user_role urole left join u_role role on urole.r
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="type != null" >
-        #{type,jdbcType=VARCHAR},
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -61,7 +61,7 @@ SELECT role.id,role.name from u_user_role urole left join u_role role on urole.r
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="type != null" >
-        type = #{type,jdbcType=VARCHAR},
+        description = #{description,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -69,7 +69,7 @@ SELECT role.id,role.name from u_user_role urole left join u_role role on urole.r
   <update id="updateByPrimaryKey" parameterType="demo.entity.Role" >
     update u_role
     set name = #{name,jdbcType=VARCHAR},
-      type = #{type,jdbcType=VARCHAR}
+      description = #{description,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

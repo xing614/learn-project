@@ -6,7 +6,9 @@ import java.util.List;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -65,20 +67,29 @@ public class ShiroRealm extends AuthorizingRealm {
 	}
 
     /**
-     * 登录认证,也就是说验证用户输入的账号和密码是否正确。
+     * 登录(身份)认证,也就是说验证用户输入的账号和密码是否正确。
      * 获取用户的权限信息，这是为下一步的授权做判断，获取当前用户的角色和这些角色所拥有的权限信息
      */
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
 		// TODO Auto-generated method stub
-
+		System.out.println("身份认证方法：MyShiroRealm.doGetAuthenticationInfo()");
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+        
+        String username = token.getUsername();
+        String password = String.valueOf(token.getPassword());
         //查出是否有此用户
-        User hasUser = UserDao.selectByName(token.getUsername());
+        User hasUser = UserDao.selectByNameAndPass(username, password);
+        if(hasUser == null) {
+            throw new UnknownAccountException();//没找到帐号
+        }
+        if(hasUser.getStatus()!=1) {
+        	throw new LockedAccountException(); //帐号锁定
+        }
         if (hasUser != null) {
             // 若存在，将此用户存放到登录认证info中，无需自己做密码对比，Shiro会为我们进行密码对比校验
-            List<Role> rlist = RoleDao.findRoleByUid(hasUser.getId());//获取用户角色
-            List<Permission> plist = PermissionDao.findPermissionByUid(hasUser.getId());//获取用户权限
+            List<Role> rlist = RoleDao.findRoleByUid(hasUser.getId());//获取用户角色,根据用户id查询角色id，name
+            List<Permission> plist = PermissionDao.findPermissionByUid(hasUser.getId());//获取用户权限,根据用户角色表的用户id查询权限表的全部数据
             List<String> roleStrlist=new ArrayList<String>();////用户的角色集合
             List<String> perminsStrlist=new ArrayList<String>();//用户的权限集合
             for (Role role : rlist) {
@@ -92,7 +103,7 @@ public class ShiroRealm extends AuthorizingRealm {
 //            Session session = SecurityUtils.getSubject().getSession();
 //            session.setAttribute("user", hasUser);//成功则放入session
          // 若存在，将此用户存放到登录认证info中，无需自己做密码对比，Shiro会为我们进行密码对比校验
-            return new SimpleAuthenticationInfo(hasUser, hasUser.getPassword(), getName());
+            return new SimpleAuthenticationInfo(hasUser, password, getName());//这是返回的身份凭据？
         }
         return null;
 	}

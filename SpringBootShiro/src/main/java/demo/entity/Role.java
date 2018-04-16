@@ -5,7 +5,7 @@ public class Role {
 
     private String name;
 
-    private String type;
+    private String description;
 
     public Long getId() {
         return id;
@@ -23,11 +23,12 @@ public class Role {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getType() {
-        return type;
-    }
+    public String getDescription() {
+		return description;
+	}
 
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
+	public void setDescription(String description) {
+		this.description = description == null ? null : description.trim();
+	}
+
 }

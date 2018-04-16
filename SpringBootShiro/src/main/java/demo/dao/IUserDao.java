@@ -26,4 +26,6 @@ public interface IUserDao {
     
     User selectByName(@Param("username")String userName);
     
+    User selectByEmailAndPawd(@Param("email")String email,@Param("password")String password);
+    
 }

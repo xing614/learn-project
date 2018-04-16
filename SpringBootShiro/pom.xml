@@ -11,13 +11,14 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.0.0.RELEASE</version>
+    <version>1.5.1.RELEASE</version>
   </parent>
   <properties>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	<java.version>1.8</java.version>
 	<mysql.version>5.1.35</mysql.version>  
+	<shiro.version>1.4.0</shiro.version>
   </properties>
   <dependencies>
     <!-- 上边引入 parent，因此 下边无需指定版本 -->
@@ -25,6 +26,10 @@
   	<dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-redis</artifactId>
     </dependency>
             <!-- JJWT 加密-->
     <dependency>
@@ -79,15 +84,27 @@
     <dependency>
         <groupId>org.apache.shiro</groupId>
         <artifactId>shiro-spring</artifactId>
-        <version>1.2.5</version>
+        <version>${shiro.version}</version>
     </dependency>
     <dependency>
         <groupId>org.apache.shiro</groupId>
         <artifactId>shiro-ehcache</artifactId>
-        <version>1.2.5</version>
+        <version>${shiro.version}</version>
     </dependency>
-	
-
+    
+    <!-- shiro+redis缓存插件 -->
+    <dependency>
+        <groupId>org.crazycake</groupId>
+        <artifactId>shiro-redis</artifactId>
+        <version>2.4.2.1-RELEASE</version>
+    </dependency>
+        
+	<!--spring2.0集成redis所需common-pool2-->
+	<dependency>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-pool2</artifactId>
+		<version>2.4.2</version>
+	</dependency>
 
     <dependency>
       <groupId>junit</groupId>

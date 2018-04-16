@@ -32,6 +32,14 @@ public class ReturnJsonBody implements Serializable {
         this.data = data;
     }
 
+    
+	public ReturnJsonBody(int code, Object data, String msg) {
+		super();
+		this.code = code;
+		this.data = data;
+		this.msg = msg;
+	}
+
 	public int getCode() {
 		return code;
 	}
@@ -55,4 +63,11 @@ public class ReturnJsonBody implements Serializable {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
+
+	@Override
+	public String toString() {
+		return "ReturnJsonBody [code=" + code + ", data=" + data + ", msg=" + msg + "]";
+	}
+	
+	
 }

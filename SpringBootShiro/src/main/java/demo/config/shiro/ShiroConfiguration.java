@@ -9,12 +9,22 @@ import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.crazycake.shiro.RedisCacheManager;
+import org.crazycake.shiro.RedisManager;
+import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import demo.config.MyExceptionHandler;
@@ -27,12 +37,24 @@ import demo.config.MySessionManager;
  */
 @Configuration
 public class ShiroConfiguration {
+	
+    @Value("${spring.redis.host}")
+    private String host;
+    
+    @Value("${spring.redis.port}")
+    private int port;
+    
+    @Value("${spring.redis.timeout}")
+    private int timeout;
+    
 	/**
-	 * Shiro生命周期处理器
+	 * Shiro生命周期处理器，暂时注释，因为有了这个之后，使用@value不管用
+	 * 说加入static就可以了,还真可以
+	 * 
 	 * @return
 	 */
     @Bean(name = "lifecycleBeanPostProcessor")
-    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+    public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
     }
 
@@ -65,7 +87,7 @@ public class ShiroConfiguration {
         return ehCacheManager;
     }
 
-    //安全管理器
+    //安全管理器，通过它来链接Realm和用户(文档中称之为Subject.)
     //DefaultWebSecurityManager类主要定义了设置subjectDao，获取会话模式，设置会话模式，设置会话管理器，是否是http会话模式等操作，它继承了DefaultSecurityManager类，实现了WebSecurityManager接口
     @Bean(name = "securityManager")
     public DefaultWebSecurityManager securityManager(){
@@ -73,11 +95,18 @@ public class ShiroConfiguration {
         securityManager.setRealm(shiroRealm());
         //SecurityManager的Bean中调用setSessionManager(SessionManager sessionManager)方法加载我们的自定义SessionManager
         securityManager.setSessionManager(sessionManager());  
+        //改成使用redis的sessionManager
         securityManager.setCacheManager(ehCacheManager());//用户授权/认证信息Cache, 采用EhCache 缓存
+        //注入记住我管理器;
+//        securityManager.setRememberMeManager(rememberMeManager());
         return securityManager;
     }
 
-    //Shiro的Web过滤器
+    /**
+     * Shiro的Web过滤器,处理拦截资源文件问题
+     * @param securityManager
+     * @return
+     */
     @Bean(name = "shiroFilter")
     public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager  securityManager){
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
@@ -88,7 +117,7 @@ public class ShiroConfiguration {
 //        logoutFilter.setRedirectUrl("/login");
 //        filters.put("logout", logoutFilter);
 //        shiroFilterFactoryBean.setFilters(filters);
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+host);
         Map<String, String> filterChainDefinitionManager = new LinkedHashMap<>();
         //注意过滤器配置顺序 不能颠倒  
         //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了，登出后跳转配置的loginUrl
@@ -137,12 +166,6 @@ public class ShiroConfiguration {
         aasa.setSecurityManager(securityManager);
         return aasa;
     }
-
-    //thymeleaf模板引擎和shiro整合时使用
-    /*@Bean(name = "shiroDialect")
-    public ShiroDialect shiroDialect(){
-        return new ShiroDialect();
-    }*/
     
     /** 
      * 注册全局异常处理 
@@ -150,7 +173,8 @@ public class ShiroConfiguration {
      */  
     @Bean(name = "exceptionHandler")  
     public HandlerExceptionResolver handlerExceptionResolver() {  
-        return new MyExceptionHandler();  
+    	MyExceptionHandler myExceptionHandler = new MyExceptionHandler();
+        return myExceptionHandler;  
     } 
     
     //自定义sessionManager  将登录成功的认证session存入cookie
@@ -159,5 +183,8 @@ public class ShiroConfiguration {
         MySessionManager mySessionManager = new MySessionManager();  
         return mySessionManager;  
     } 
+
+
+
 
 }

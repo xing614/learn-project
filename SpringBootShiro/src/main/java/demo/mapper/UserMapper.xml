@@ -11,7 +11,7 @@
     <result column="status" jdbcType="BIGINT" property="status" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, username, email, password, create_time, last_login_time, status
+    id, username, email, password, create_time, last_login_time, status,salt,pswdsalt
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -38,10 +38,10 @@
   <insert id="insert" parameterType="demo.entity.User">
     insert into u_user (id, username, email, 
       password, create_time, last_login_time, 
-      status)
+      status,salt,pswdsalt)
     values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=BIGINT})
+      #{status,jdbcType=BIGINT},#{salt,jdbcType=VARCHAR},#{pswdsalt,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="demo.entity.User">
     insert into u_user
@@ -67,6 +67,12 @@
       <if test="status != null">
         status,
       </if>
+      <if test="salt != null">
+        salt,
+      </if>    
+      <if test="salt != null">
+        pswdsalt,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -89,6 +95,12 @@
       </if>
       <if test="status != null">
         #{status,jdbcType=BIGINT},
+      </if>
+      <if test="salt != null">
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        #{pswdsalt,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -113,6 +125,12 @@
       <if test="status != null">
         status = #{status,jdbcType=BIGINT},
       </if>
+      <if test="salt != null">
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        pswdsalt = #{pswdsalt,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -123,7 +141,16 @@
       password = #{password,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
-      status = #{status,jdbcType=BIGINT}
+      status = #{status,jdbcType=BIGINT},
+      salt = #{salt,jdbcType=VARCHAR},
+      pswdsalt = #{pswdsalt,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+    <select id="selectByEmailAndPawd" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from u_user
+    where email = #{email} and password = #{password}
+  </select>  
+  
 </mapper>

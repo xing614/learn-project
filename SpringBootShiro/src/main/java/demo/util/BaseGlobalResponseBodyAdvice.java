@@ -9,7 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 
 /**
- * 全局json 数据返回处理
+ * 全局json 数据返回处理,ResponseBodyAdvice是spring4.1的新特性，其作用是在响应体写出之前做一些处理；比如，修改返回值、加密等。
  */
 @ControllerAdvice
 public class BaseGlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
@@ -28,6 +28,9 @@ public class BaseGlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> 
         return true;
     }
 
+    /**
+     * 在数据返回前修改数据。
+     */
 	@Override
 	public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
 			Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,
@@ -42,6 +45,7 @@ public class BaseGlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> 
 		if(!(body instanceof ReturnJsonBody)) {
         	body = new ReturnJsonBody(RespCode.SUCCESS, body);
         }
+		System.out.println(body.toString());
         return body;
 	}
 

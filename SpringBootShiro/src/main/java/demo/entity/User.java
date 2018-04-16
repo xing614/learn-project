@@ -18,7 +18,10 @@ public class User {
     private Date lastLoginTime;
 
     private Long status;//1有效，0禁止登陆
+    
+    private String salt;
 
+    private String pswdsalt;
     private List<String> roleStrlist;//保存本用户对应的角色
     
     private List<String> perminsStrlist;//保存对应的权限
@@ -78,6 +81,22 @@ public class User {
         this.status = status;
     }
 
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	public String getPswdsalt() {
+		return pswdsalt;
+	}
+
+	public void setPswdsalt(String pswdsalt) {
+		this.pswdsalt = pswdsalt;
+	}
+
 	public void setRoleStrlist(List<String> roleStrlist) {
 		// TODO Auto-generated method stub
 		this.roleStrlist = roleStrlist;
@@ -95,5 +114,12 @@ public class User {
 	public List<String> getPerminsStrlist() {
 		// TODO Auto-generated method stub
 		return perminsStrlist;
+	}
+	
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password
+				+ ", createTime=" + createTime + ", lastLoginTime=" + lastLoginTime + ", status=" + status
+				+ ", roleStrlist=" + roleStrlist + ", perminsStrlist=" + perminsStrlist + "]";
 	}
 }

@@ -12,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,8 +35,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
  * Consider defining a bean of type 'demo.service.impl.IUserServiceImpl' in your configuration.
  * 可以不implements CommandLineRunner，这是为了查看数据源信息
  */
-@RestController  
 //@EnableAutoConfiguration   //自动加载配置信息  
+@EnableCaching//启动缓存
+@RestController  
 @SpringBootApplication //用了这个其他RestController能读取，该注解指定项目为springboot，由此类当作程序入口，自动装配 web 依赖的环境
 public class TestApplication implements CommandLineRunner{  
 	

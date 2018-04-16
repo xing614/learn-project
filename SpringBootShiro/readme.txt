@@ -8,3 +8,55 @@ credentials：凭证，用户的密码，具体加密方式用户自己实现，
 
 Roles：用户拥有的角色标识（角色名称，admin,account,customer_service），字符串格式列表:用户拥有多个角色的可能
 Permissions：用户拥有的权限标识（每个权限唯一标识，比如主键或者权限唯一标识编码），字符串格式列表：用户拥有多个权限的可能
+
+需要确认前后端通信的json标准，自己设置：
+"data":{
+	"code":0,
+	"data":{
+		"token":"32ed078a-e0de-420d-8cdd-5dca3f628cf0",
+		"status":200,
+		"message":"登录成功"
+		},
+	"msg":"请求成功"
+	}
+
+
+
+整体：
+{
+	"data":{
+		"code":0,
+		"data":{
+			"token":"32ed078a-e0de-420d-8cdd-5dca3f628cf0",
+			"status":200,
+			"message":"登录成功"
+			},
+		"msg":"请求成功"
+		},
+	"status":200,
+	"statusText":"",
+	"headers":{
+		"content-type":"application/json;charset=UTF-8"
+		},
+	"config":{
+		"transformRequest":{},
+		"transformResponse":{},
+		"timeout":0,
+		"xsrfCookieName":"XSRF-TOKEN",
+		"xsrfHeaderName":"X-XSRF-TOKEN",
+		"maxContentLength":-1,
+		"headers":{
+			"Accept":"application/json, 
+			text/plain, 
+			*/*",
+			"Content-Type":"application/json;charset=utf-8"
+		},
+		"method":"post",
+		"url":"http://127.0.0.1:8081/ajaxLogin",
+		"data":"{\"username\":\"admin\",\"password\":\"123456\"}",
+		"params":null,
+		"baseURL":"http://127.0.0.1:8081",
+		"withCredentials":false
+	},
+	"request":{}
+}

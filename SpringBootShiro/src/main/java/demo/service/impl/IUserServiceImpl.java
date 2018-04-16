@@ -32,6 +32,18 @@ public class IUserServiceImpl  implements IUserService{
 	@Override
 	public User selectByNameAndPass(String username,String password) {
 		return udao.selectByNameAndPass(username,password);
+	}
+
+	@Override
+	public User selectByEmailAndPawd(String email, String password) {
+		// TODO Auto-generated method stub
+		return udao.selectByEmailAndPawd(email, password);
+	}
+
+	@Override
+	public int updateByPrimaryKeySelective(User record) {
+		// TODO Auto-generated method stub
+		return udao.updateByPrimaryKeySelective(record);
 	}	
 
 }
