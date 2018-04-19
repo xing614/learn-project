@@ -42,20 +42,12 @@ public class MyExceptionHandler implements HandlerExceptionResolver {
 		Map result = null;
 		if (ex instanceof UnauthenticatedException) {
 			bjb = new ReturnJsonBody(RespCode.UserOver);
-//			mv.addObject("code", "100001");
-//			mv.addObject("message", "token认证错误");			
 		}else if(ex instanceof UnauthorizedException){
 			bjb = new ReturnJsonBody(RespCode.UserAuthority);
-//			mv.addObject("code", "100002");
-//			mv.addObject("message", "用户无权限");			
 		}else if(ex instanceof UnknownAccountException){
 			bjb = new ReturnJsonBody(RespCode.UserError);
-//			mv.addObject("code", "100003");
-//			mv.addObject("message", "账户密码错误");			
 		}else if(ex instanceof LockedAccountException){
 			bjb = new ReturnJsonBody(RespCode.UserLimited);
-//			mv.addObject("code", "100004");
-//			mv.addObject("message", "该用户名已被锁定");			
 		}else {  
 			bjb = new ReturnJsonBody(RespCode.WARN);
 //			mv.addObject("code", "100111");

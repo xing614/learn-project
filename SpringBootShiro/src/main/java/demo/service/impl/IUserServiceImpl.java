@@ -44,6 +44,15 @@ public class IUserServiceImpl  implements IUserService{
 	public int updateByPrimaryKeySelective(User record) {
 		// TODO Auto-generated method stub
 		return udao.updateByPrimaryKeySelective(record);
+	}
+
+	@Override
+	public int insertUser(User record) {
+		// TODO Auto-generated method stub
+		if(udao.selectByName(record.getUsername()) != null) {
+			return -1;
+		}
+		return udao.insertSelective(record);
 	}	
 
 }

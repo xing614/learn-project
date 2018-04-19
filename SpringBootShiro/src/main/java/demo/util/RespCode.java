@@ -6,8 +6,12 @@ public enum RespCode {
     SUCCESS(0, "请求成功"),
 	UserError(1,"用户名或密码错误"),
 	UserLimited(2,"该用户被锁定"),
-	UserOver(3,"用户登陆过期"),
-	UserAuthority(4,"该用户无此权限");
+	UserOver(3,"用户登陆过期,请重新登录"),
+	UserAuthority(4,"您无此权限操作"),
+	InsertUserSuccess(5,"注册成功"),
+	InsertUserFailure(6,"注册失败"),
+	UserExisted(7,"该用户名已存在");
+	
 
     private int code;
     private String msg;

@@ -26,6 +26,7 @@ public class ManagerController {
     //@CrossOrigin 默认允许所有访问源和访问方法。
     @RequestMapping(value = "/getEmail", method = RequestMethod.GET)
     public Map<String,Object> getEmail() {
+    	System.out.println("-----------------/manager/getEmail--------------------");
     	User user = (User)SecurityUtils.getSubject().getPrincipal();
     	Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
     	resultMap.put("email", user.getEmail());

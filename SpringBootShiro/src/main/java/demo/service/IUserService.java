@@ -16,5 +16,7 @@ public interface IUserService {
 	public User selectByEmailAndPawd(String email,String password);
 	
 	public int updateByPrimaryKeySelective(User record);
+	
+	public int insertUser(User record);
 
 }

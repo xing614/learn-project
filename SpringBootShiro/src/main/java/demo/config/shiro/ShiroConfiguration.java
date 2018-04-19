@@ -3,6 +3,8 @@ package demo.config.shiro;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.servlet.Filter;
+
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.session.mgt.SessionManager;
@@ -29,6 +31,9 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import demo.config.MyExceptionHandler;
 import demo.config.MySessionManager;
+import demo.shiro.filter.ShiroLoginFilter;
+import demo.shiro.filter.ShiroPermsFilter;
+import demo.shiro.filter.ShiroRolesFilter;
 
 /**
  * shiro配置项
@@ -111,12 +116,14 @@ public class ShiroConfiguration {
     public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager  securityManager){
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-
-//        Map<String, Filter> filters = new LinkedHashMap<String, Filter>();
+        Map<String, Filter> filters = new LinkedHashMap<String, Filter>();
 //        LogoutFilter logoutFilter = new LogoutFilter();
 //        logoutFilter.setRedirectUrl("/login");
 //        filters.put("logout", logoutFilter);
-//        shiroFilterFactoryBean.setFilters(filters);
+        filters.put("roles", shiroRolesFilter());
+        
+//        filters.put("shiroLoginFilter", shiroLoginFilter());
+        shiroFilterFactoryBean.setFilters(filters);
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+host);
         Map<String, String> filterChainDefinitionManager = new LinkedHashMap<>();
         //注意过滤器配置顺序 不能颠倒  
@@ -128,7 +135,7 @@ public class ShiroConfiguration {
         filterChainDefinitionManager.put("/user/**", "authc,roles[user]");//表示需要认证才可以访问 
         filterChainDefinitionManager.put("/shop/**", "authc,roles[shop]");
         filterChainDefinitionManager.put("/admin/**", "authc,roles[admin]");
-        filterChainDefinitionManager.put("/manager/**", "authc,roles[admin]");
+        filterChainDefinitionManager.put("/manager/**", "authc,roles[manager]");
         filterChainDefinitionManager.put("/login", "anon");//anon 可以理解为不拦截，表示可以匿名访问
         filterChainDefinitionManager.put("/ajaxLogin", "anon");//anon 可以理解为不拦截
         //filterChainDefinitionManager.put("/**",  "authc,roles[user]");//其他资源全部拦截
@@ -184,7 +191,29 @@ public class ShiroConfiguration {
         return mySessionManager;  
     } 
 
+//    //自定义用于权限不足时返回json数据
+//    @Bean(name = "myFormAuthenticationFilter")
+//    public MyFormAuthenticationFilter myFormAuthenticationFilter() {
+//    	MyFormAuthenticationFilter mf = new MyFormAuthenticationFilter();
+//    	return mf;
+//    }
 
+    //自定义进入控制层前先判断是否登录
+//    @Bean(name="shiroLoginFilter")
+//    public ShiroLoginFilter shiroLoginFilter() {  
+//    	ShiroLoginFilter shiroLoginFilter = new ShiroLoginFilter();  
+//        return shiroLoginFilter;  
+//    }     
 
-
+//  @Bean(name="shiroPermsFilter")
+//  public ShiroPermsFilter shiroPermsFilter() {  
+//	  ShiroPermsFilter shiroPermsFilter = new ShiroPermsFilter();  
+//      return shiroPermsFilter;  
+//  } 
+  
+  @Bean(name="shiroRolesFilter")
+  public ShiroRolesFilter shiroRolesFilter() {  
+	  ShiroRolesFilter shiroRolesFilter = new ShiroRolesFilter();  
+      return shiroRolesFilter;  
+  } 
 }

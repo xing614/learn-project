@@ -12,6 +12,7 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class ShiroRealm extends AuthorizingRealm {
      */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+		System.out.println("权限认证方法：doGetAuthorizationInfo");
         //获取当前登录输入的用户名，等价于(String) principalCollection.fromRealm(getName()).iterator().next();
 //      String loginName = (String) super.getAvailablePrincipal(principalCollection);
       User user = (User) principalCollection.getPrimaryPrincipal();
@@ -75,7 +77,7 @@ public class ShiroRealm extends AuthorizingRealm {
 		// TODO Auto-generated method stub
 		System.out.println("身份认证方法：MyShiroRealm.doGetAuthenticationInfo()");
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-        
+
         String username = token.getUsername();
         String password = String.valueOf(token.getPassword());
         //查出是否有此用户

@@ -13,6 +13,7 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
@@ -145,11 +146,41 @@ public class AdminController {
      * @param map
      * @return
      */
+//    @RequestMapping(value = "/ajaxLogin", method = RequestMethod.POST)
+//    public Map<String,Object> ajaxLoginPost(@RequestBody Map map,HttpServletRequest request) {
+//    	System.out.println("==========================进入loginpost===================");
+//    	String username = (String) map.get("username");
+//    	String password = (String)map.get("password");
+//    	System.out.println(username);
+//    	Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
+//        if (username != null && password != null) {
+////          try {
+//          	  UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+//              SecurityUtils.getSubject().login(token);
+//              //将token放入响应数据中，之后前端Ajax带着该token
+//              resultMap.put("token", SecurityUtils.getSubject().getSession().getId());
+//              resultMap.put("status", 200);
+//              resultMap.put("message", "登录成功");
+//
+////          } catch (Exception e) {
+////              resultMap.put("status", 500);
+////              resultMap.put("message", "message = "+e.getMessage());
+////          }
+//        }
+//        return resultMap;
+//    }
+    
+    /**
+     * 修改了前端axios封装，post的方式也可以直接从Url中获取数据
+     * @param map
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/ajaxLogin", method = RequestMethod.POST)
-    public Map<String,Object> ajaxLoginPost(@RequestBody Map map,HttpServletRequest request) {
+    public Map<String,Object> ajaxLoginPost(User user,HttpServletRequest request) {
     	System.out.println("==========================进入loginpost===================");
-    	String username = (String) map.get("username");
-    	String password = (String)map.get("password");
+    	String username = user.getUsername();
+    	String password = user.getPassword();
     	System.out.println(username);
     	Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
         if (username != null && password != null) {
@@ -160,16 +191,17 @@ public class AdminController {
               resultMap.put("token", SecurityUtils.getSubject().getSession().getId());
               resultMap.put("status", 200);
               resultMap.put("message", "登录成功");
-
+              //上一个浏览的非Ajax的地址，在登录后，取得地址，如果不为null，那么就跳转过去
+              String url = (String) request.getAttribute(WebUtils.FORWARD_REQUEST_URI_ATTRIBUTE);
+              if(url != null)
+            	  resultMap.put("returnUrl", url);
 //          } catch (Exception e) {
 //              resultMap.put("status", 500);
 //              resultMap.put("message", "message = "+e.getMessage());
 //          }
         }
         return resultMap;
-
     }
-    
     //跳转到登录表单页面
     @RequiresPermissions(value = { "usermanager"})//只有当用户的权限有usermanager才可以
     @RequestMapping(value = "/getEmail", method = RequestMethod.GET)
@@ -181,7 +213,25 @@ public class AdminController {
         return resultMap;
     }
     
+    /**
+     * 注册方法
+     * @return
+     */
+    @PostMapping("/ajaxRegister")
+    public ReturnJsonBody ajaxRegister(User user) {
+    	int re = userService.insertUser(user);
+    	if(re ==-1)
+    		return new ReturnJsonBody(RespCode.UserExisted);
+    	else if(re ==0)
+    		return new ReturnJsonBody(RespCode.InsertUserFailure);
+    	else 
+    		return new ReturnJsonBody(RespCode.InsertUserSuccess);
 
+    	
+    }
+    
+    
+    
     @RequestMapping("/403")
     public String unauthorizedRole(){
     	System.out.println("------没有权限-------");

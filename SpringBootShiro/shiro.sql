@@ -58,6 +58,8 @@ CREATE TABLE `u_user` (
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `last_login_time` datetime DEFAULT NULL COMMENT '最后登录时间',
   `status` bigint(1) DEFAULT '1' COMMENT '1:有效，0:禁止登录',
+  `salt` varchar(32) DEFAULT NULL COMMENT '盐',
+  `pswdsalt` varchar(32) DEFAULT NULL COMMENT '加密后的密码',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
